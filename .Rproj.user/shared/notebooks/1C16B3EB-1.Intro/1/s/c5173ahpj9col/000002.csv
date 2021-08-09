@@ -1,7 +1,0 @@
-"0","reticulate::repl_python()"
-"2","Python 3.6.13 (/Users/d842a922/Library/r-miniconda/envs/r-reticulate/bin/python)
-Reticulate 1.20 REPL -- A Python interpreter in R.
-"
-"0","py$x"
-"2","SyntaxError: invalid syntax (<string>, line 1)
-"
