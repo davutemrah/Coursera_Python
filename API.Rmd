@@ -1,0 +1,216 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+## Application Program Interface
+
+two software communicate with each other
+
+For example, the way pandas library works.
+
+```{python}
+
+import pandas as pd
+
+dict1 = {"abc": [1, 2, 3], "def": [4, 5, 6]}
+
+df = pd.DataFrame(dict1)
+
+df.head()
+```
+
+REST APIs
+
+Respresentational State Transfer APIs
+
+HTTP is the way of communication. You send a message to web service API, it performs the process and return the message with HTTP, and data in JSOn format.
+
+
+## An example COIN Gecko API
+
+```{python}
+# import coingecko library
+
+!pip install pycoingecko
+from pycoingecko import CoinGeckoAPI
+
+# create a client object
+cg = CoinGeckoAPI()   
+
+bitcoin_data = cg.get_coin_market_chart_by_id(id = "bitcoin",
+vs_currency = "usd", days = 30)
+
+# data will be downloaded in JSON format
+
+# We are interested in price
+bitcoin_data['price']
+
+data = pd.DataFrame(bitcoin_price_data, columns = ['TimeStamp', 'Price'])
+
+data['Date'] = pd.to_datetime(data['TimeStamp'], units = 'ms')
+
+
+## candle stick
+
+candlestick_data = data.groupby(data.Date.dt.date).agg({'Price': ['min', 'max', 'first', 'last']})
+
+
+## Use plotly to make a chart
+
+fig = go.Figure(data = [go.Candlestick(x = candlestick_data.index,
+open = candlestick_data['Price']['first'],
+high = candlestick_data['Price']['max'],
+low = candlestick_data['Price']['min'],
+close = candlestick_data['Price']['last']) ])
+
+fig.update_layout(xaxis_rangeslider_visible = False, xaxis_title = 'Date',
+yaxis_title = 'Price (USD $)', title = 'Bitcoin Candlestick Chart Over Past 30 Days')
+
+plot(fig, filename = 'bitcoin_candlestick_graph.html')
+
+```
+
+
+# API keys and requests
+
+API key is way to access the API. API uses the key to identify the requester.
+
+## Watson Text to Speech API
+
+```{r}
+from ibm_watson import SpeechToTextV1
+
+url_s2t = "https://stream.watsonplatform.net/speech-to-text/api"
+
+key_s2t = "Eocixxxxxxxxxxxx"
+
+s2t = SpeechToTextV1(iam_apikey = key_s2t, url = url_s2t)
+
+filename = "hello_this_is_python.wav"
+
+with open(filename, mode = "rb") as wav:
+    response  = s2t.recognize(audio = wav, content_type = 'audio/wav')
+```
+
+```{r}
+recognized_text = responde.result['ressults'][0]['alternatives'][0]['transcript']
+```
+
+## language translator
+
+```{r}
+from ibm_watson import LanguageTranslatorV3
+
+url_lt = "hrrps://gateway.watsonplatform.net/language-translator/api"
+
+api_key = 'sdfbkfbkjwbefkqjkqejfkqjrbgkr'
+
+version_lt = '2018-05-01'
+
+language_translator = LanguageTranslatorV3(iam_apikey = api_key, url = url_lt, version = version_lt)
+
+language_translator.list_identifiable_language().get_result()
+
+
+recognized_text = "hello this is python"
+
+translation_response = language_translator.translate(text = recognized_text, model_id = 'en-es')
+
+
+
+translation = translation_response.get_result()
+translation
+
+spanish_translation = translation['translations'][0]['translation']
+
+translation_new = language_translator.translate(text = spanish_translation, model_id = 'es-en').get_result()
+
+translation_eng = translation_new['translations'][0]['translation']
+translation_eng
+
+
+french_translation = language_translator.translate(text = translation_eng, model_id = 'en-fr').get_result()
+french_translation['translations'][0]['translation']
+
+
+```
+
+
+
+
+### HTML for web scraping
+
+We need to understand the how webpages are built with html. There are tags where data is stored in each section. we need to know that which tags are important to us.
+
+<h?>  headlines
+<p> paragraph
+<body>
+<a href = "https://www.ibm.com"> ibm webpage </a>
+ 
+### HTML tables
+
+<table>
+    <tr>
+        <td> cells
+        <td> cells
+
+
+## what is web scraping
+
+`from bs4 import BeautifulSoup`
+`html = "url string"`
+
+parse
+
+soup = BeautifulSoup(html, 'html5lib')
+
+title = soup.title
+soup.h3
+
+sibling = tag_object.next_sibling
+
+
+tag_child.attrs
+
+
+tag_child.string
+
+**`find_all`**
+```
+table_row = table.find_all(name = "tr")
+table_row
+
+first_row = table_row[0]
+first_row
+```
+
+Iterate through table rows
+
+```
+for i, row in enumerate(table_rows):
+
+    print("row", i)
+    cells = row.find_all("td")
+    
+    for j, cell in enumerate(cells):
+    
+        print("column", j, "cell", cell)
+    
+    
+    
+    
+    
+    
+    
+    
+
+```
+
+
+
+
+
+
+
+
